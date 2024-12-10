@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question List</title>
+    <style>
+        /* 페이지 중앙 정렬 */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* 테이블 스타일 */
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            max-width: 600px;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        th, td {
+            padding: 12px 20px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>제목</th>
+        <th>작성일시</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="question : ${questionList}">
+        <td>
+            <a th:href="@{|/question/detail/${question.getId()}|}" th:text="${question.getSubject()}"></a>
+        </td>
+        <td th:text="${question.getSubject()}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Detail</title>
+    <style>
+        td {
+            padding: 12px 20px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        form {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h1 th:text="${questionDto.getSubject()}"></h1>
+    <div th:text="${questionDto.getContent()}"></div>
+</div>
+<div>
+    <h5 th:text="|${#lists.size(questionDto.getAnswerList())}개의 답변이 있습니다.|"></h5>
+    <div>
+        <ul>
+            <li th:each="answer : ${questionDto.getAnswerList()}" th:text="${answer.content}"></li>
+        </ul>
+    </div>
+</div>
+<form th:action="@{|/answer/${questionDto.getId()}|}" method="post">
+    <textarea name="content" id="content" rows="15"></textarea>
+    <input type="submit" value="답변등록">
+</form>
+</body>
+</html>
+
+

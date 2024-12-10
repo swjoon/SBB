@@ -1,4 +1,4 @@
-package org.sbb.sbb.dummy;
+package org.sbb.sbb.config.dummy;
 
 import org.sbb.sbb.answer.domain.Answer;
 import org.sbb.sbb.question.domain.Question;
@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 public class DummyObject {
 
     protected static Question newQuestion(String subject, String content) {
-
         return Question.builder().subject(subject).content(content).createDate(LocalDateTime.now()).build();
     }
 
