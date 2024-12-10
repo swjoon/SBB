@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.sbb.sbb.answer.repository.AnswerRepository;
 import org.sbb.sbb.answer.domain.Answer;
 import org.sbb.sbb.question.domain.Question;
-import org.sbb.sbb.dummy.DummyObject;
+import org.sbb.sbb.config.dummy.DummyObject;
 import org.sbb.sbb.question.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
