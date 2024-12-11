@@ -11,13 +11,13 @@ import java.util.List;
 public class QuestionRespDto {
 
     @Data
-    public static class QuestionDto {
+    public static class GetQuestionDto {
         private Integer id;
         private String subject;
         private String content;
         private LocalDateTime createDate;
 
-        public QuestionDto(Question question){
+        public GetQuestionDto(Question question){
             this.id = question.getId();
             this.subject = question.getSubject();
             this.content = question.getContent();
