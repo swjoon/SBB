@@ -16,17 +16,10 @@ public class DummyDevInit extends DummyObject{
     @Bean
     CommandLineRunner init (AnswerRepository answerRepository, QuestionRepository questionRepository) {
         return args -> {
-            Question q1 = questionRepository.save(newQuestion("test1", "test1 Content"));
-            Question q2 = questionRepository.save(newQuestion("test2", "test2 Content"));
-            Question q3 = questionRepository.save(newQuestion("test3", "test3 Content"));
-            Question q4 = questionRepository.save(newQuestion("test4", "test4 Content"));
-            Question q5 = questionRepository.save(newQuestion("test5", "test5 Content"));
-
-            Answer a1 = answerRepository.save(newAnswer("test1 Answer", q1));
-            Answer a2 = answerRepository.save(newAnswer("test2 Answer", q1));
-            Answer a3 = answerRepository.save(newAnswer("test3 Answer", q2));
-            Answer a4 = answerRepository.save(newAnswer("test4 Answer", q2));
-            Answer a5 = answerRepository.save(newAnswer("test5 Answer", q5));
+            for(int i  = 1; i <= 300; i++){
+                Question q = questionRepository.save(newQuestion("테스트 데이터입니다. [" + i + "]", "테스트 내용입니다.[" + i + "]"));
+                Answer a = answerRepository.save(newAnswer("테스트 댓글입니다.[" + i + "]", q));
+            }
         };
     }
 }
