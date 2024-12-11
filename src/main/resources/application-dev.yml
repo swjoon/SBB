@@ -25,6 +25,9 @@ spring:
   output:
     ansi:
       enabled: always
+  thymeleaf:
+    enabled: true
+    cache: false
 
 
 springdoc:

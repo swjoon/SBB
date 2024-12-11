@@ -1,39 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Question Detail</title>
-    <style>
-        td {
-            padding: 12px 20px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        form {
-            display: block;
-        }
-    </style>
-</head>
-<body>
-<div>
-    <h1 th:text="${questionDto.getSubject()}"></h1>
-    <div th:text="${questionDto.getContent()}"></div>
-</div>
-<div>
-    <h5 th:text="|${#lists.size(questionDto.getAnswerList())}개의 답변이 있습니다.|"></h5>
-    <div>
-        <ul>
-            <li th:each="answer : ${questionDto.getAnswerList()}" th:text="${answer.content}"></li>
-        </ul>
+<!doctype html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<div layout:fragment="content" class="container my-3">
+    <h2 class="border-bottom py-2" th:text="${questionDto.getSubject()}"></h2>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;" th:text="${questionDto.getContent()}"></div>
+            <div class="d-flex justify-content-end">
+                <div class="badge bg-light text-dark p-2 text-start">
+                    <div th:text="${#temporals.format(questionDto.getCreateDate(), 'yyyy-MM-dd HH:mm')}"></div>
+                </div>
+            </div>
+        </div>
     </div>
+    <h5 class="border-bottom my-3 py-2"
+        th:text="|${#lists.size(questionDto.getAnswerList())}개의 답변이 있습니다.|"></h5>
+    <div class="card my-3" th:each="answer : ${questionDto.getAnswerList()}">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;" th:text="${answer.getContent()}"></div>
+            <div class="d-flex justify-content-end">
+                <div class="badge bg-light text-dark p-2 text-start">
+                    <div th:text="${#temporals.format(answer.getCreateDate(), 'yyyy-MM-dd HH:mm')}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form th:action="@{|/answer/${questionDto.getId()}|}" method="post" th:object="${answerSaveDto}" class="my-3">
+        <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+        <textarea th:field="*{content}" rows="10" class="form-control"></textarea>
+        <input type="submit" value="답변등록" class="btn btn-primary my-2">
+    </form>
 </div>
-<form th:action="@{|/answer/${questionDto.getId()}|}" method="post">
-    <textarea name="content" id="content" rows="15"></textarea>
-    <input type="submit" value="답변등록">
-</form>
-</body>
 </html>
 
 
