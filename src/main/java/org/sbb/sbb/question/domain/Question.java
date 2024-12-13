@@ -2,9 +2,8 @@ package org.sbb.sbb.question.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.sbb.sbb.answer.domain.Answer;
+import org.sbb.sbb.user.domain.Users;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.List;
 @Table(name = "question")
 @Entity
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,7 +28,13 @@ public class Question {
 
     private LocalDateTime createDate;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private LocalDateTime modifyDate;
+
+    @JoinColumn(name = "users_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Users users;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Answer> answerList;
 
     public String toString(){

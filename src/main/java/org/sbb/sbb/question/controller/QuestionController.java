@@ -7,6 +7,7 @@ import org.sbb.sbb.question.domain.dto.QuestionReqDto.*;
 import org.sbb.sbb.question.domain.dto.QuestionRespDto.*;
 import org.sbb.sbb.question.service.QuestionService;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,11 +40,11 @@ public class QuestionController {
     }
 
     @PostMapping("/create")
-    public String questionCreate(@Valid PostQuestionDto postQuestionDto, BindingResult bindingResult) {
+    public String questionCreate(@Valid PostQuestionDto postQuestionDto, BindingResult bindingResult, Authentication authentication) {
         if (bindingResult.hasErrors()) {
             return "question_form";
         }
-        questionService.saveQuestion(postQuestionDto);
+        questionService.saveQuestion(authentication.getName(),postQuestionDto);
         return "redirect:/question/list";
     }
 
