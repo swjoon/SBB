@@ -3,6 +3,9 @@ package org.sbb.sbb.answer.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.sbb.sbb.question.domain.Question;
+import org.sbb.sbb.user.domain.Users;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +25,12 @@ public class Answer {
     private String content;
 
     private LocalDateTime createDate;
+
+    private LocalDateTime modifyDate;
+
+    @JoinColumn(name = "users_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Users users;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")

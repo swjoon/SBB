@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.sbb.sbb.answer.domain.dto.AnswerReqDto.*;
 import org.sbb.sbb.answer.service.AnswerService;
 import org.sbb.sbb.question.service.QuestionService;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,12 +22,13 @@ public class AnswerController {
     private final QuestionService questionService;
 
     @PostMapping("/{id}")
-    public String submit(Model model, @PathVariable int id, @Valid AnswerSaveDto answerSaveDto , BindingResult bindingResult) {
+    public String submit(Model model, @PathVariable int id, @Valid AnswerSaveDto answerSaveDto, BindingResult bindingResult, Authentication authentication) {
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("questionDto", questionService.findQuestion(id));
             return "question_detail";
         }
-        answerService.saveAnswer(id, answerSaveDto);
+        answerService.saveAnswer(id, authentication.getName(), answerSaveDto);
         return "redirect:/question/detail/" + id;
     }
 
