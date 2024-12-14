@@ -8,7 +8,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/question/list}">로그인</a>
+                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
+                    <form class="nav-link" sec:authorize="isAuthenticated()" th:action="@{/user/logout}" method="post">
+                        <button class="nav-link" type="submit">로그아웃</button>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/signup}">회원가입</a>
                 </li>
             </ul>
         </div>
