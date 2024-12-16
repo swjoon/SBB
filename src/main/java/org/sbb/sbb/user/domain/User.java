@@ -43,10 +43,10 @@ public class Users {
     @LastModifiedDate
     private LocalDateTime modifyDate;
 
-    @OneToMany()
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Question> questionList;
 
-    @OneToMany()
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Answer> answerList;
 
 }
