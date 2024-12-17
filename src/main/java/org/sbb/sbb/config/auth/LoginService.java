@@ -1,7 +1,7 @@
 package org.sbb.sbb.config.auth;
 
 import lombok.RequiredArgsConstructor;
-import org.sbb.sbb.user.domain.Users;
+import org.sbb.sbb.user.domain.User;
 import org.sbb.sbb.user.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,7 +16,7 @@ public class LoginService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users user = userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException("인증실패"));
+        User user = userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException("인증실패"));
 
         return new LoginUser(user);
     }

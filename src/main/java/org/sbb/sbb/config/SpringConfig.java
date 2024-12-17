@@ -41,10 +41,10 @@ public class SpringConfig {
                 .authorizeHttpRequests(request -> request.anyRequest().permitAll())
                 .formLogin((formLogin) -> formLogin
                         .loginPage("/user/login")
-                        .defaultSuccessUrl("/question/list"))
+                        .defaultSuccessUrl("/"))
                 .logout((logout) -> logout
                         .logoutUrl("/user/logout")
-                        .logoutSuccessUrl("/question/list")
+                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true));
 
         return http.build();

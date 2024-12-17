@@ -3,19 +3,18 @@ package org.sbb.sbb.config.auth;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.sbb.sbb.user.domain.Users;
+import org.sbb.sbb.user.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
 public class LoginUser implements UserDetails {
 
-    private final Users user;
+    private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
