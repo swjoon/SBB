@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
-import org.sbb.sbb.user.domain.Users;
+import org.sbb.sbb.user.domain.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -32,8 +32,8 @@ public class UserReqDto {
         @NotEmpty(message = "이메일은 필수항목입니다.")
         String email;
 
-        public Users toEntity(BCryptPasswordEncoder bCryptPasswordEncoder) {
-            return Users.builder()
+        public User toEntity(BCryptPasswordEncoder bCryptPasswordEncoder) {
+            return User.builder()
                     .username(this.username)
                     .password(bCryptPasswordEncoder.encode(this.password))
                     .nickname(this.nickname)
