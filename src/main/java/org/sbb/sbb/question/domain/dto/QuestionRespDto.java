@@ -17,15 +17,21 @@ public class QuestionRespDto {
         private Integer id;
         private String subject;
         private String content;
+        private String username;
+        private String nickname;
         private LocalDateTime createDate;
-        private List<AnswerDto> answerList;
+        private LocalDateTime modifyDate;
+        private List<GetAnswerDto> answerList;
 
         public GetQuestionDto(Question question) {
             this.id = question.getId();
             this.subject = question.getSubject();
             this.content = question.getContent();
+            this.username = question.getUser().getUsername();
+            this.nickname = question.getUser().getNickname();
             this.createDate = question.getCreateDate();
-            this.answerList = question.getAnswerList().stream().map(AnswerDto::new).collect(Collectors.toList());
+            this.modifyDate = question.getModifyDate();
+            this.answerList = question.getAnswerList().stream().map(GetAnswerDto::new).collect(Collectors.toList());
         }
     }
 
@@ -34,15 +40,26 @@ public class QuestionRespDto {
         private Integer id;
         private String subject;
         private String content;
+        private String username;
+        private String nickname;
+        private int voterSize;
         private LocalDateTime createDate;
-        private List<AnswerDto> answerList;
+        private LocalDateTime modifyDate;
+        private List<GetAnswerDto> answerList;
+
+
 
         public QuestionContainAnswerDto(Question question, List<Answer> answerList) {
             this.id = question.getId();
             this.subject = question.getSubject();
             this.content = question.getContent();
+            this.username = question.getUser().getUsername();
+            this.nickname = question.getUser().getNickname();
+            this.voterSize = question.getVoter().size();
             this.createDate = question.getCreateDate();
-            this.answerList = answerList.stream().map(AnswerDto::new).collect(Collectors.toList());
+            this.modifyDate = question.getModifyDate();
+            this.answerList = answerList.stream().map(GetAnswerDto::new).collect(Collectors.toList());
+
         }
 
     }

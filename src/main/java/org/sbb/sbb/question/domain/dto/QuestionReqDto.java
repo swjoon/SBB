@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.sbb.sbb.question.domain.Question;
-import org.sbb.sbb.user.domain.Users;
+import org.sbb.sbb.user.domain.User;
 
 import java.time.LocalDateTime;
 
@@ -19,11 +19,11 @@ public class QuestionReqDto {
         @NotEmpty(message = "내용은 필수항목입니다.")
         private String content;
 
-        public Question toEntity(Users user){
+        public Question toEntity(User user){
             return Question.builder()
                     .subject(this.subject.trim())
                     .content(this.content.trim())
-                    .users(user)
+                    .user(user)
                     .createDate(LocalDateTime.now())
                     .modifyDate(LocalDateTime.now())
                     .build();
