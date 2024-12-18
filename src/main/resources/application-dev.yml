@@ -29,6 +29,13 @@ spring:
     enabled: true
     cache: false
 
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG
+#    root: DEBUG
+#    org.springframework: DEBUG
+#    com.example: DEBUG
 
 springdoc:
   api-docs:

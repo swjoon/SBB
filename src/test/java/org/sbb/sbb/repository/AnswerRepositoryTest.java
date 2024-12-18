@@ -9,6 +9,7 @@ import org.sbb.sbb.answer.domain.Answer;
 import org.sbb.sbb.question.domain.Question;
 import org.sbb.sbb.config.dummy.DummyObject;
 import org.sbb.sbb.question.repository.QuestionRepository;
+import org.sbb.sbb.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -44,10 +45,11 @@ public class AnswerRepositoryTest extends DummyObject {
     }
 
     private void dataSetting() {
-        Question q1 = DummyObject.newQuestion("sbb가 무엇인가요?", "sbb에 대해서 알고 싶습니다.");
-        Question q2 = DummyObject.newQuestion("스프링부트 모델 질문입니다.", "id는 자동으로 생성되나요?");
+        User user = DummyObject.newUser("testuser1", "test1", "<EMAIL>");
+        Question q1 = DummyObject.newQuestion("sbb가 무엇인가요?", "sbb에 대해서 알고 싶습니다.", user);
+        Question q2 = DummyObject.newQuestion("스프링부트 모델 질문입니다.", "id는 자동으로 생성되나요?", user);
 
-        Answer a1 = DummyObject.newAnswer("네 자동으로 생성됩니다.",q2);
+        Answer a1 = DummyObject.newAnswer("네 자동으로 생성됩니다.", user, q2);
 
         questionRepository.save(q1);
         questionRepository.save(q2);
@@ -57,10 +59,10 @@ public class AnswerRepositoryTest extends DummyObject {
 
     @Test
     @DisplayName("select * from answer")
-    void selectAll(){
+    void selectAll() {
         List<Answer> all = answerRepository.findAll();
 
-        for(Answer a : all){
+        for (Answer a : all) {
             System.out.println(a.toString());
             System.out.println(a.getQuestion().toString());
         }
@@ -68,7 +70,7 @@ public class AnswerRepositoryTest extends DummyObject {
 
     @Test
     @DisplayName("select * from answer where id = 1")
-    void selectOneById(){
+    void selectOneById() {
         // when
         Optional<Answer> oa = answerRepository.findById(1);
         assertTrue(oa.isPresent());
@@ -80,7 +82,7 @@ public class AnswerRepositoryTest extends DummyObject {
 
     @Test
     @DisplayName("select * from answer where question_id = 2")
-    void getAnswerList(){
+    void getAnswerList() {
         Optional<Question> oq = questionRepository.findById(2);
         assertTrue(oq.isPresent());
         Question q = oq.get();

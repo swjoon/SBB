@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.sbb.sbb.question.domain.Question;
 import org.sbb.sbb.config.dummy.DummyObject;
 import org.sbb.sbb.question.repository.QuestionRepository;
+import org.sbb.sbb.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -39,8 +40,9 @@ public class QuestionRepositoryTest extends DummyObject {
     }
 
     private void dataSetting() {
-        Question q1 = DummyObject.newQuestion("sbb가 무엇인가요?", "sbb에 대해서 알고 싶습니다.");
-        Question q2 = DummyObject.newQuestion("스프링부트 모델 질문입니다.", "id는 자동으로 생성되나요?");
+        User user = DummyObject.newUser("testuser1",  "test1", "<EMAIL>");
+        Question q1 = DummyObject.newQuestion("sbb가 무엇인가요?", "sbb에 대해서 알고 싶습니다.", user);
+        Question q2 = DummyObject.newQuestion("스프링부트 모델 질문입니다.", "id는 자동으로 생성되나요?", user);
         questionRepository.save(q1);
         questionRepository.save(q2);
     }
