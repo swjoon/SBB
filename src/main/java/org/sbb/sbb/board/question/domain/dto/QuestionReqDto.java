@@ -1,9 +1,9 @@
-package org.sbb.sbb.question.domain.dto;
+package org.sbb.sbb.board.question.domain.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.sbb.sbb.question.domain.Question;
+import org.sbb.sbb.board.question.domain.Question;
 import org.sbb.sbb.user.domain.User;
 
 import java.time.LocalDateTime;

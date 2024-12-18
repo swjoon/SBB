@@ -1,11 +1,10 @@
-package org.sbb.sbb.answer.service;
+package org.sbb.sbb.board.answer.service;
 
 import lombok.RequiredArgsConstructor;
-import org.sbb.sbb.answer.domain.Answer;
-import org.sbb.sbb.answer.domain.dto.AnswerReqDto.*;
-import org.sbb.sbb.answer.domain.dto.AnswerRespDto.*;
-import org.sbb.sbb.answer.repository.AnswerRepository;
-import org.sbb.sbb.question.domain.Question;
+import org.sbb.sbb.board.answer.domain.Answer;
+import org.sbb.sbb.board.answer.domain.dto.AnswerReqDto.*;
+import org.sbb.sbb.board.answer.repository.AnswerRepository;
+import org.sbb.sbb.board.question.domain.Question;
 import org.sbb.sbb.user.domain.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,8 +47,8 @@ public class AnswerService {
     }
 
     @Transactional
-    public void voteAnswer(Answer answer, User user) {
+    public Answer voteAnswer(Answer answer, User user) {
         answer.getVoter().add(user);
-        answerRepository.save(answer);
+        return answerRepository.save(answer);
     }
 }

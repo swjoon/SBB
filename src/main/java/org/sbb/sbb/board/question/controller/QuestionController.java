@@ -1,14 +1,15 @@
-package org.sbb.sbb.question.controller;
+package org.sbb.sbb.board.question.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.sbb.sbb.answer.domain.Answer;
-import org.sbb.sbb.answer.domain.dto.AnswerReqDto.*;
-import org.sbb.sbb.answer.service.AnswerService;
-import org.sbb.sbb.question.domain.Question;
-import org.sbb.sbb.question.domain.dto.QuestionReqDto.*;
-import org.sbb.sbb.question.domain.dto.QuestionRespDto.*;
-import org.sbb.sbb.question.service.QuestionService;
+import org.sbb.sbb.board.answer.domain.Answer;
+import org.sbb.sbb.board.answer.domain.dto.AnswerReqDto.*;
+import org.sbb.sbb.board.answer.service.AnswerService;
+import org.sbb.sbb.board.board.service.BoardService;
+import org.sbb.sbb.board.question.domain.Question;
+import org.sbb.sbb.board.question.domain.dto.QuestionReqDto.*;
+import org.sbb.sbb.board.question.domain.dto.QuestionRespDto.*;
+import org.sbb.sbb.board.question.service.QuestionService;
 import org.sbb.sbb.user.domain.User;
 import org.sbb.sbb.user.service.UserService;
 import org.springframework.data.domain.Page;
@@ -28,8 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuestionController {
 
-    private final UserService userService;
-    private final AnswerService answerService;
+    private final BoardService boardService;
     private final QuestionService questionService;
 
     @GetMapping("/list")
@@ -43,8 +43,7 @@ public class QuestionController {
 
     @GetMapping("/detail/{id}")
     public String questionDetail(Model model, @PathVariable int id, AnswerSaveDto answerSaveDto) {
-        List<Answer> answerList = answerService.findAll(id);
-        QuestionContainAnswerDto questionDto = questionService.findQuestion(id , answerList);
+        QuestionContainAnswerDto questionDto = boardService.getQustionDetail(id);
         model.addAttribute("questionDto", questionDto);
         return "question_detail";
     }
@@ -58,12 +57,12 @@ public class QuestionController {
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public String questionCreate(@Valid PostQuestionDto postQuestionDto, BindingResult bindingResult, Authentication authentication) {
+
         if (bindingResult.hasErrors()) {
             return "question_form";
         }
 
-        User user = userService.getUser(authentication.getName());
-        questionService.saveQuestion(postQuestionDto, user);
+        boardService.saveQuestion(postQuestionDto, authentication.getName());
         return "redirect:/question/list";
     }
 
@@ -71,7 +70,7 @@ public class QuestionController {
     @PreAuthorize("isAuthenticated()")
     public String questionModify(@PathVariable int id, PostQuestionDto postQuestionDto, Authentication authentication) {
         Question question = questionService.getQuestion(id);
-        if(!question.getUser().getUsername().equals(authentication.getName())) {
+        if (!question.getUser().getUsername().equals(authentication.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         postQuestionDto.setSubject(question.getSubject());
@@ -89,8 +88,8 @@ public class QuestionController {
 
         Question question = questionService.getQuestion(id);
 
-        if(!question.getUser().getUsername().equals(authentication.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"수정권한이 없습니다.");
+        if (!question.getUser().getUsername().equals(authentication.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 
         questionService.modifyQuestion(postQuestionDto, question);
@@ -103,8 +102,8 @@ public class QuestionController {
     public String questionDelete(@PathVariable int id, Authentication authentication) {
         Question question = questionService.getQuestion(id);
 
-        if(!question.getUser().getUsername().equals(authentication.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"삭제권한이 없습니다.");
+        if (!question.getUser().getUsername().equals(authentication.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
 
         questionService.deleteQuestion(question);
@@ -116,10 +115,7 @@ public class QuestionController {
     @PreAuthorize("isAuthenticated()")
     public String questionVote(@PathVariable int id, Authentication authentication) {
 
-        User user = userService.getUser(authentication.getName());
-        Question question = questionService.getQuestion(id);
-
-        questionService.voteQuestion(question, user);
+        boardService.questionVote(id, authentication.getName());
 
         return String.format("redirect:/question/detail/%s", id);
     }

@@ -1,7 +1,7 @@
 package org.sbb.sbb.config.dummy;
 
-import org.sbb.sbb.answer.domain.Answer;
-import org.sbb.sbb.question.domain.Question;
+import org.sbb.sbb.board.answer.domain.Answer;
+import org.sbb.sbb.board.question.domain.Question;
 import org.sbb.sbb.user.domain.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

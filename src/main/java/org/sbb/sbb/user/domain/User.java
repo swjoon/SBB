@@ -3,8 +3,8 @@ package org.sbb.sbb.user.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.sbb.sbb.answer.domain.Answer;
-import org.sbb.sbb.question.domain.Question;
+import org.sbb.sbb.board.answer.domain.Answer;
+import org.sbb.sbb.board.question.domain.Question;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 

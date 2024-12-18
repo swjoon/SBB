@@ -1,7 +1,7 @@
-package org.sbb.sbb.answer.domain.dto;
+package org.sbb.sbb.board.answer.domain.dto;
 
 import lombok.Data;
-import org.sbb.sbb.answer.domain.Answer;
+import org.sbb.sbb.board.answer.domain.Answer;
 
 import java.time.LocalDateTime;
 

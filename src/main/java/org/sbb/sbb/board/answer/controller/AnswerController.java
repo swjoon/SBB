@@ -1,12 +1,13 @@
-package org.sbb.sbb.answer.controller;
+package org.sbb.sbb.board.answer.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.sbb.sbb.answer.domain.Answer;
-import org.sbb.sbb.answer.domain.dto.AnswerReqDto.*;
-import org.sbb.sbb.answer.service.AnswerService;
-import org.sbb.sbb.question.domain.Question;
-import org.sbb.sbb.question.service.QuestionService;
+import org.sbb.sbb.board.answer.domain.Answer;
+import org.sbb.sbb.board.answer.domain.dto.AnswerReqDto.*;
+import org.sbb.sbb.board.answer.service.AnswerService;
+import org.sbb.sbb.board.board.service.BoardService;
+import org.sbb.sbb.board.question.domain.Question;
+import org.sbb.sbb.board.question.service.QuestionService;
 import org.sbb.sbb.user.domain.User;
 import org.sbb.sbb.user.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -28,22 +29,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AnswerController {
 
-    private final UserService userService;
+    private final BoardService boardService;
     private final AnswerService answerService;
-    private final QuestionService questionService;
 
     @PostMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public String submit(Model model, @PathVariable int id, @Valid AnswerSaveDto answerSaveDto, BindingResult bindingResult, Authentication authentication) {
-        List<Answer> answerList = answerService.findAll(id);
-
         if (bindingResult.hasErrors()) {
-            model.addAttribute("questionDto", questionService.findQuestion(id, answerList));
+            model.addAttribute("questionDto", boardService.findQuestion(id));
             return "question_detail";
         }
-        User user = userService.getUser(authentication.getName());
-        Question question = questionService.getQuestion(id);
-        Answer answer = answerService.saveAnswer(answerSaveDto, user, question);
+        Answer answer = boardService.saveAnswer(id,authentication.getName(), answerSaveDto);
         return String.format("redirect:/question/detail/%s#answer_%s", id, answer.getId());
     }
 
@@ -97,10 +93,7 @@ public class AnswerController {
     @PreAuthorize("isAuthenticated()")
     public String answerVote(@PathVariable Integer id, Authentication authentication) {
 
-        User user = userService.getUser(authentication.getName());
-        Answer answer = answerService.getAnswer(id);
-
-        answerService.voteAnswer(answer, user);
+        Answer answer = boardService.answerVote(id, authentication.getName());
 
         return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(),answer.getId());
     }

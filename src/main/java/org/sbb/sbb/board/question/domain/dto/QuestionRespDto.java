@@ -1,10 +1,10 @@
-package org.sbb.sbb.question.domain.dto;
+package org.sbb.sbb.board.question.domain.dto;
 
 import lombok.Data;
 
-import org.sbb.sbb.answer.domain.Answer;
-import org.sbb.sbb.answer.domain.dto.AnswerRespDto.*;
-import org.sbb.sbb.question.domain.Question;
+import org.sbb.sbb.board.answer.domain.Answer;
+import org.sbb.sbb.board.answer.domain.dto.AnswerRespDto.*;
+import org.sbb.sbb.board.question.domain.Question;
 
 import java.time.LocalDateTime;
 import java.util.List;

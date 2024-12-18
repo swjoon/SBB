@@ -1,12 +1,11 @@
-package org.sbb.sbb.question.service;
+package org.sbb.sbb.board.question.service;
 
 import lombok.RequiredArgsConstructor;
-import org.sbb.sbb.answer.domain.Answer;
-import org.sbb.sbb.question.domain.Question;
-import org.sbb.sbb.question.domain.dto.QuestionReqDto;
-import org.sbb.sbb.question.domain.dto.QuestionReqDto.*;
-import org.sbb.sbb.question.domain.dto.QuestionRespDto.*;
-import org.sbb.sbb.question.repository.QuestionRepository;
+import org.sbb.sbb.board.answer.domain.Answer;
+import org.sbb.sbb.board.question.domain.Question;
+import org.sbb.sbb.board.question.domain.dto.QuestionReqDto.*;
+import org.sbb.sbb.board.question.domain.dto.QuestionRespDto.*;
+import org.sbb.sbb.board.question.repository.QuestionRepository;
 import org.sbb.sbb.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
