@@ -17,7 +17,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       '[hibernate.default_batch_fetch_size]': 100
       '[hibernate.format_sql]': true
@@ -31,10 +31,11 @@ spring:
 
 logging:
   level:
+    org.springframework: DEBUG
     org.springframework.security: DEBUG
     org.springframework.security.web.FilterChainProxy: DEBUG
+    org.hibernate: DEBUG
 #    root: DEBUG
-#    org.springframework: DEBUG
 #    com.example: DEBUG
 
 springdoc:

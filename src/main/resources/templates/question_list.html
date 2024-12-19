@@ -25,9 +25,13 @@
             <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
             <td class="text-start">
                 <a th:href="@{|/question/detail/${question.getId()}|}" th:text="${question.getSubject()}"></a>
+                <span class="text-danger small ms-2"
+                      th:if="${question.getAnswerCount() > 0}"
+                      th:text="${question.getAnswerCount()}">
+                </span>
             </td>
             <td><span th:if="${question.getUsername() != null}" th:text="${question.getUsername()}"></span></td>
-            <td th:text="${#temporals.format(question.getCreateDate(), 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${#temporals.format(question.getModifyDate(), 'yyyy-MM-dd HH:mm')}"></td>
         </tr>
         </tbody>
     </table>
@@ -59,14 +63,14 @@
 </div>
 <script layout:fragment="script" type='text/javascript'>
     const page_elements = document.getElementsByClassName("page-link");
-    Array.from(page_elements).forEach(function(element) {
-        element.addEventListener('click', function() {
+    Array.from(page_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
             document.getElementById('page').value = this.dataset.page;
             document.getElementById('searchForm').submit();
         });
     });
     const btn_search = document.getElementById("btn_search");
-    btn_search.addEventListener('click', function() {
+    btn_search.addEventListener('click', function () {
         document.getElementById('kw').value = document.getElementById('search_kw').value;
         document.getElementById('page').value = 0;  // 검색버튼을 클릭할 경우 0페이지부터 조회한다.
         document.getElementById('searchForm').submit();

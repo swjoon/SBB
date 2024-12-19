@@ -5,13 +5,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.sbb.sbb.board.question.domain.Question;
+import org.sbb.sbb.board.question.domain.dto.resp.*;
 import org.sbb.sbb.config.dummy.DummyObject;
 import org.sbb.sbb.board.question.repository.QuestionRepository;
 import org.sbb.sbb.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,5 +107,20 @@ public class QuestionRepositoryTest extends DummyObject {
 
         // then
         assertEquals(1, questionRepository.count());
+    }
+
+    @Test
+    @DisplayName(" 페이징 ")
+    void paging(){
+        List<Sort.Order> sort = new ArrayList<>();
+
+        sort.add(new Sort.Order(Sort.Direction.DESC, "id"));
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(sort));
+
+        String kw = "";
+
+        Page<GetQuestionDto> testpage = questionRepository.findAllByKeyword(kw, pageable);
+
     }
 }

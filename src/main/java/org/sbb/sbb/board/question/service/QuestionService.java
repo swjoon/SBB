@@ -3,8 +3,8 @@ package org.sbb.sbb.board.question.service;
 import lombok.RequiredArgsConstructor;
 import org.sbb.sbb.board.answer.domain.Answer;
 import org.sbb.sbb.board.question.domain.Question;
-import org.sbb.sbb.board.question.domain.dto.QuestionReqDto.*;
-import org.sbb.sbb.board.question.domain.dto.QuestionRespDto.*;
+import org.sbb.sbb.board.question.domain.dto.req.*;
+import org.sbb.sbb.board.question.domain.dto.resp.*;
 import org.sbb.sbb.board.question.repository.QuestionRepository;
 import org.sbb.sbb.user.domain.User;
 import org.springframework.data.domain.Page;
@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +26,12 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
 
-    public Question getQuestion(int id){
+    public Question getQuestion(int id) {
         return questionRepository.findById(id).orElseThrow(() -> new NoSuchElementException("데이터를 찾을 수 없습니다."));
+    }
+
+    public List<Question> findAll() {
+        return questionRepository.findAll();
     }
 
     public QuestionContainAnswerDto findQuestion(int id, List<Answer> answerList) {
@@ -36,18 +39,11 @@ public class QuestionService {
         return new QuestionContainAnswerDto(question, answerList);
     }
 
-    public List<GetQuestionDto> findAll() {
-        return questionRepository.findAll()
-                .stream()
-                .map(GetQuestionDto::new)
-                .collect(Collectors.toList());
-    }
-
-    public Page<GetQuestionDto> getQuestionList(int page, String kw){
+    public Page<GetQuestionDto> getQuestionList(int page, String kw) {
         List<Sort.Order> sort = new ArrayList<>();
         sort.add(new Sort.Order(Sort.Direction.DESC, "id"));
-        Pageable pageable = PageRequest.of(page,10, Sort.by(sort));
-        return questionRepository.findAllByKeyword(kw,pageable).map(GetQuestionDto::new);
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));
+        return questionRepository.findAllByKeyword(kw, pageable);
     }
 
     @Transactional
