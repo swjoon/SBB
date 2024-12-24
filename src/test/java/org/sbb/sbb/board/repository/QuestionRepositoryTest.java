@@ -1,4 +1,4 @@
-package org.sbb.sbb.repository;
+package org.sbb.sbb.board.repository;
 
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
