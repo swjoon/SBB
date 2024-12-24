@@ -2,7 +2,7 @@ package org.sbb.sbb.board.question.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.sbb.sbb.board.answer.domain.dto.AnswerReqDto.*;
+import org.sbb.sbb.board.answer.domain.dto.req.*;
 import org.sbb.sbb.board.board.service.BoardService;
 import org.sbb.sbb.board.question.domain.Question;
 import org.sbb.sbb.board.question.domain.dto.resp.*;
@@ -30,7 +30,7 @@ public class QuestionController {
     public String questionList(Model model,
                                @RequestParam(value = "page", defaultValue = "0") int page,
                                @RequestParam(value = "kw", defaultValue = "") String kw) {
-        Page<GetQuestionDto> paging = questionService.getQuestionList(page, kw);
+        Page<GetQuestionDto> paging = questionService.getQuestionPage(page, kw);
         model.addAttribute("kw", kw);
         model.addAttribute("paging", paging);
         return "question_list";
@@ -114,6 +114,4 @@ public class QuestionController {
 
         return String.format("redirect:/question/detail/%s", id);
     }
-
-
 }

@@ -2,7 +2,7 @@ package org.sbb.sbb.board.board.service;
 
 import lombok.RequiredArgsConstructor;
 import org.sbb.sbb.board.answer.domain.Answer;
-import org.sbb.sbb.board.answer.domain.dto.AnswerReqDto.*;
+import org.sbb.sbb.board.answer.domain.dto.req.*;
 import org.sbb.sbb.board.answer.service.AnswerService;
 import org.sbb.sbb.board.question.domain.Question;
 import org.sbb.sbb.board.question.domain.dto.resp.*;
@@ -25,7 +25,7 @@ public class BoardService {
     private final QuestionService questionService;
 
     public QuestionContainAnswerDto getQustionDetail(int questionId) {
-        List<Answer> answerList = answerService.findAll(questionId);
+        List<Answer> answerList = answerService.getAnswerList(questionId);
         return questionService.findQuestion(questionId, answerList);
     }
 
@@ -43,7 +43,7 @@ public class BoardService {
     }
 
     public QuestionContainAnswerDto findQuestion(int questionId) {
-        List<Answer> answerList = answerService.findAll(questionId);
+        List<Answer> answerList = answerService.getAnswerList(questionId);
         return questionService.findQuestion(questionId, answerList);
     }
 

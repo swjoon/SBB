@@ -30,7 +30,7 @@ public class QuestionService {
         return questionRepository.findById(id).orElseThrow(() -> new NoSuchElementException("데이터를 찾을 수 없습니다."));
     }
 
-    public List<Question> findAll() {
+    public List<Question> getQuestionsList() {
         return questionRepository.findAll();
     }
 
@@ -39,7 +39,7 @@ public class QuestionService {
         return new QuestionContainAnswerDto(question, answerList);
     }
 
-    public Page<GetQuestionDto> getQuestionList(int page, String kw) {
+    public Page<GetQuestionDto> getQuestionPage(int page, String kw) {
         List<Sort.Order> sort = new ArrayList<>();
         sort.add(new Sort.Order(Sort.Direction.DESC, "id"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sort));

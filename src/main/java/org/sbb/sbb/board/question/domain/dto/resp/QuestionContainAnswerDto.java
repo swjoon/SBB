@@ -2,7 +2,7 @@ package org.sbb.sbb.board.question.domain.dto.resp;
 
 import lombok.Data;
 import org.sbb.sbb.board.answer.domain.Answer;
-import org.sbb.sbb.board.answer.domain.dto.AnswerRespDto;
+import org.sbb.sbb.board.answer.domain.dto.resp.*;
 import org.sbb.sbb.board.question.domain.Question;
 
 import java.time.LocalDateTime;
@@ -19,7 +19,7 @@ public class QuestionContainAnswerDto {
     private int voterSize;
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
-    private List<AnswerRespDto.GetAnswerDto> answerList;
+    private List<GetAnswerDto> answerList;
 
 
 
@@ -32,7 +32,7 @@ public class QuestionContainAnswerDto {
         this.voterSize = question.getVoter().size();
         this.createDate = question.getCreateDate();
         this.modifyDate = question.getModifyDate();
-        this.answerList = answerList.stream().map(AnswerRespDto.GetAnswerDto::new).collect(Collectors.toList());
+        this.answerList = answerList.stream().map(GetAnswerDto::new).collect(Collectors.toList());
 
     }
 

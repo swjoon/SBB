@@ -3,13 +3,9 @@ package org.sbb.sbb.board.answer.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sbb.sbb.board.answer.domain.Answer;
-import org.sbb.sbb.board.answer.domain.dto.AnswerReqDto.*;
+import org.sbb.sbb.board.answer.domain.dto.req.*;
 import org.sbb.sbb.board.answer.service.AnswerService;
 import org.sbb.sbb.board.board.service.BoardService;
-import org.sbb.sbb.board.question.domain.Question;
-import org.sbb.sbb.board.question.service.QuestionService;
-import org.sbb.sbb.user.domain.User;
-import org.sbb.sbb.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -21,8 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/answer")
