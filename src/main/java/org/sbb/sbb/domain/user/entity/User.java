@@ -1,11 +1,11 @@
-package org.sbb.sbb.user.entity;
+package org.sbb.sbb.domain.user.entity;
 
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.sbb.sbb.board.answer.entity.Answer;
-import org.sbb.sbb.board.comment.domain.Comment;
-import org.sbb.sbb.board.question.domain.Question;
+import org.sbb.sbb.domain.answer.entity.Answer;
+import org.sbb.sbb.domain.comment.entity.Comment;
+import org.sbb.sbb.domain.question.entity.Question;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 

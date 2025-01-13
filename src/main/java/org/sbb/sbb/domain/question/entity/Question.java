@@ -1,11 +1,12 @@
-package org.sbb.sbb.domain.question.domain;
+package org.sbb.sbb.domain.question.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.sbb.sbb.domain.answer.entity.Answer;
-import org.sbb.sbb.domain.category.domain.Category;
-import org.sbb.sbb.domain.comment.domain.Comment;
+import org.sbb.sbb.domain.category.entity.Category;
+import org.sbb.sbb.domain.comment.entity.Comment;
 import org.sbb.sbb.domain.user.entity.User;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,7 +51,6 @@ public class Question {
     @ManyToOne(fetch = FetchType.EAGER)
     private Category category;
 
-    public String toString(){
-        return "subject : " + subject + " content : " + content;
-    }
+    private int viewCount;
+
 }

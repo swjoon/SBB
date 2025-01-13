@@ -1,10 +1,10 @@
-package org.sbb.sbb.board.answer.entity;
+package org.sbb.sbb.domain.answer.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.sbb.sbb.board.comment.domain.Comment;
-import org.sbb.sbb.board.question.domain.Question;
-import org.sbb.sbb.user.entity.User;
+import org.sbb.sbb.domain.comment.entity.Comment;
+import org.sbb.sbb.domain.question.entity.Question;
+import org.sbb.sbb.domain.user.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.List;

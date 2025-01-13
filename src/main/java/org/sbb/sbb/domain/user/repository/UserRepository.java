@@ -1,6 +1,6 @@
-package org.sbb.sbb.user.repository;
+package org.sbb.sbb.domain.user.repository;
 
-import org.sbb.sbb.user.entity.User;
+import org.sbb.sbb.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

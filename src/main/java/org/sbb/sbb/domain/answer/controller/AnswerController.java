@@ -1,11 +1,11 @@
-package org.sbb.sbb.board.answer.controller;
+package org.sbb.sbb.domain.answer.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.sbb.sbb.board.answer.dto.req.AnswerSaveDto;
-import org.sbb.sbb.board.answer.entity.Answer;
-import org.sbb.sbb.board.answer.service.AnswerService;
-import org.sbb.sbb.board.board.service.BoardService;
+import org.sbb.sbb.domain.answer.dto.AnswerDto;
+import org.sbb.sbb.domain.answer.entity.Answer;
+import org.sbb.sbb.domain.answer.service.AnswerService;
+import org.sbb.sbb.domain.board.service.BoardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -28,32 +28,32 @@ public class AnswerController {
 
     @PostMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String submit(Model model, @PathVariable int id, @Valid AnswerSaveDto answerSaveDto, BindingResult bindingResult, Authentication authentication) {
+    public String submit(Model model, @PathVariable int id, @Valid AnswerDto.AnswerSave answerSave, BindingResult bindingResult, Authentication authentication) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("questionDto", boardService.getQuestionDetail(id));
+            model.addAttribute("questionDto", boardService.getQuestionDetail(id, 0, "id"));
             return "question_detail";
         }
-        Answer answer = boardService.saveAnswer(id,authentication.getName(), answerSaveDto);
+        Answer answer = boardService.saveAnswer(id, authentication.getName(), answerSave);
         return String.format("redirect:/question/detail/%s#answer_%s", id, answer.getId());
     }
 
     @GetMapping("/modify/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String answerModify(@PathVariable Integer id, AnswerSaveDto answerSaveDto, Authentication authentication) {
+    public String answerModify(@PathVariable Integer id, AnswerDto.AnswerSave answerSave, Authentication authentication) {
         Answer answer = answerService.getAnswer(id);
 
         if (!answer.getUser().getUsername().equals(authentication.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 
-        answerSaveDto.setContent(answer.getContent());
+        answerSave.setContent(answer.getContent());
 
         return "answer_form";
     }
 
     @PostMapping("/modify/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String answerModify(@PathVariable Integer id, @Valid AnswerSaveDto answerSaveDto, BindingResult bindingResult, Authentication authentication) {
+    public String answerModify(@PathVariable Integer id, @Valid AnswerDto.AnswerSave answerSave, BindingResult bindingResult, Authentication authentication) {
         if (bindingResult.hasErrors()) {
             return "answer_form";
         }
@@ -64,7 +64,7 @@ public class AnswerController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
 
-        answerService.modifyAnswer(answerSaveDto, answer);
+        answerService.modifyAnswer(answerSave, answer);
 
         return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());
     }
@@ -89,6 +89,6 @@ public class AnswerController {
 
         Answer answer = boardService.answerVote(id, authentication.getName());
 
-        return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(),answer.getId());
+        return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());
     }
 }

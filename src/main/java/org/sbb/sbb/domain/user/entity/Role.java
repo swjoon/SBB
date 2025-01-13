@@ -1,4 +1,4 @@
-package org.sbb.sbb.user.entity;
+package org.sbb.sbb.domain.user.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,5 +8,5 @@ import lombok.Getter;
 public enum Role {
     ROLE_USER("유저"), ROLE_ADMIN("관리자");
 
-    private String value;
+    private final String value;
 }
