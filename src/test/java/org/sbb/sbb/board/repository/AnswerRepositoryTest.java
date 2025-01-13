@@ -4,13 +4,14 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.sbb.sbb.board.answer.repository.AnswerRepository;
-import org.sbb.sbb.board.answer.domain.Answer;
-import org.sbb.sbb.board.question.domain.Question;
-import org.sbb.sbb.config.dummy.DummyObject;
-import org.sbb.sbb.board.question.repository.QuestionRepository;
-import org.sbb.sbb.user.domain.User;
-import org.sbb.sbb.user.repository.UserRepository;
+import org.sbb.sbb.domain.answer.repository.AnswerRepository;
+import org.sbb.sbb.domain.answer.entity.Answer;
+import org.sbb.sbb.domain.category.entity.Category;
+import org.sbb.sbb.domain.question.entity.Question;
+import org.sbb.sbb.common.dummy.DummyObject;
+import org.sbb.sbb.domain.question.repository.QuestionRepository;
+import org.sbb.sbb.domain.user.entity.User;
+import org.sbb.sbb.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
@@ -56,8 +57,9 @@ public class AnswerRepositoryTest extends DummyObject {
 
     private void dataSetting() {
         User user = DummyObject.newUser("testuser1", "test1", "<EMAIL>");
-        Question q1 = DummyObject.newQuestion("sbb가 무엇인가요?", "sbb에 대해서 알고 싶습니다.", user);
-        Question q2 = DummyObject.newQuestion("스프링부트 모델 질문입니다.", "id는 자동으로 생성되나요?", user);
+        Category category = DummyObject.newCategory("고민");
+        Question q1 = DummyObject.newQuestion("sbb가 무엇인가요?", "sbb에 대해서 알고 싶습니다.", user, category);
+        Question q2 = DummyObject.newQuestion("스프링부트 모델 질문입니다.", "id는 자동으로 생성되나요?", user, category);
         userRepository.save(user);
         questionRepository.save(q1);
         questionRepository.save(q2);
@@ -109,8 +111,8 @@ public class AnswerRepositoryTest extends DummyObject {
         List<Sort.Order> list = new ArrayList<>();
         list.add(new Sort.Order(Sort.Direction.DESC, "id"));
         Pageable pageable = PageRequest.of(0, 2, Sort.by(list));
-
-        Page<Answer> answerPage = answerRepository.findAnswersByQuestionId(2, pageable);
+        Question question = questionRepository.findById(2).get();
+        Page<Answer> answerPage = answerRepository.findAnswersByQuestion(question, pageable);
 
         System.out.println(answerPage.getTotalElements());
 
@@ -121,17 +123,22 @@ public class AnswerRepositoryTest extends DummyObject {
     @Test
     @DisplayName("추천수정렬 페이징")
     void getAnswerPageVote() {
-        User user = userRepository.findById(1L).get();
-        Answer answer = answerRepository.findById(1).get();
-        answer.getVoter().add(user);
+        User user1 = userRepository.findById(1L).get();
+        User user2 = userRepository.findById(1L).get();
+        Answer answer1 = answerRepository.findById(1).get();
+        answer1.getVoter().add(user1);
+        answer1.getVoter().add(user2);
+        Answer answer2 = answerRepository.findById(2).get();
+        answer2.getVoter().add(user1);
+//        answer2.getVoter().add(user2);
 
         List<Sort.Order> list = new ArrayList<>();
         list.add(new Sort.Order(Sort.Direction.DESC, "voter"));
         Pageable pageable = PageRequest.of(0, 2, Sort.by(list));
+        Question question = questionRepository.findById(2).get();
+        Page<Answer> answerPage = answerRepository.findAnswersByQuestion(question, pageable);
 
-        Page<Answer> answerPage = answerRepository.findAnswersByQuestionId(2, pageable);
-
-        System.out.println(answerPage.getContent().get(0).getContent());
+        System.out.println(answerPage.getContent().get(0));
 
         assertEquals(1 + "", answerPage.getContent().get(0).getContent());
     }

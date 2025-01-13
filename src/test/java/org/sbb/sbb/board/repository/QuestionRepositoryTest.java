@@ -4,11 +4,11 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.sbb.sbb.board.question.domain.Question;
-import org.sbb.sbb.board.question.domain.dto.resp.*;
-import org.sbb.sbb.config.dummy.DummyObject;
-import org.sbb.sbb.board.question.repository.QuestionRepository;
-import org.sbb.sbb.user.domain.User;
+import org.sbb.sbb.domain.category.entity.Category;
+import org.sbb.sbb.domain.question.entity.Question;
+import org.sbb.sbb.common.dummy.DummyObject;
+import org.sbb.sbb.domain.question.repository.QuestionRepository;
+import org.sbb.sbb.domain.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
@@ -46,9 +46,10 @@ public class QuestionRepositoryTest extends DummyObject {
     }
 
     private void dataSetting() {
-        User user = DummyObject.newUser("testuser1",  "test1", "<EMAIL>");
-        Question q1 = DummyObject.newQuestion("sbb가 무엇인가요?", "sbb에 대해서 알고 싶습니다.", user);
-        Question q2 = DummyObject.newQuestion("스프링부트 모델 질문입니다.", "id는 자동으로 생성되나요?", user);
+        User user = DummyObject.newUser("testuser1", "test1", "<EMAIL>");
+        Category category = DummyObject.newCategory("고민");
+        Question q1 = DummyObject.newQuestion("sbb가 무엇인가요?", "sbb에 대해서 알고 싶습니다.", user, category);
+        Question q2 = DummyObject.newQuestion("스프링부트 모델 질문입니다.", "id는 자동으로 생성되나요?", user, category);
         questionRepository.save(q1);
         questionRepository.save(q2);
     }
@@ -111,7 +112,7 @@ public class QuestionRepositoryTest extends DummyObject {
 
     @Test
     @DisplayName(" 페이징 ")
-    void paging(){
+    void paging() {
         List<Sort.Order> sort = new ArrayList<>();
 
         sort.add(new Sort.Order(Sort.Direction.DESC, "id"));
@@ -120,7 +121,7 @@ public class QuestionRepositoryTest extends DummyObject {
 
         String kw = "";
 
-        Page<GetQuestionDto> testpage = questionRepository.findAllByKeyword(kw, pageable);
+        Page<Question> testpage = questionRepository.findAllByKeyword(kw, pageable);
 
     }
 }
