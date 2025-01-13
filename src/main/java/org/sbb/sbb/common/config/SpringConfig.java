@@ -1,4 +1,4 @@
-package org.sbb.sbb.config;
+package org.sbb.sbb.common.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

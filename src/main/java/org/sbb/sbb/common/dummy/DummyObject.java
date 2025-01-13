@@ -1,4 +1,4 @@
-package org.sbb.sbb.common.config.dummy;
+package org.sbb.sbb.common.dummy;
 
 import org.sbb.sbb.domain.answer.entity.Answer;
 import org.sbb.sbb.domain.category.entity.Category;

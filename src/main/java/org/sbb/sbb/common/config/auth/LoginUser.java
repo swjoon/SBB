@@ -1,9 +1,9 @@
-package org.sbb.sbb.config.auth;
+package org.sbb.sbb.common.config.auth;
 
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.sbb.sbb.user.entity.User;
+import org.sbb.sbb.domain.user.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
