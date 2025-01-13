@@ -2,6 +2,8 @@
 <html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">>
 <div layout:fragment="content" class="container my-3">
+
+    <!--  제목   -->
     <h2 class="border-bottom py-2" th:text="${questionDto.getSubject()}"></h2>
     <div class="card my-3">
         <div class="card-body">
@@ -13,32 +15,106 @@
                     <div th:text="${#temporals.format(questionDto.getModifyDate(), 'yyyy-MM-dd HH:mm')}"></div>
                 </div>
             </div>
-            <div class="my-3 d-flex gap-2">
-                <form th:action="@{|/question/vote/${questionDto.getId()}|}" method="post"
-                      sec:authorize="isAuthenticated()">
-                    <button type="submit" class="recommend btn btn-sm btn-outline-secondary" href="javascript:void(0);">
-                        추천
-                        <span class="badge rounded-pill bg-success" th:text="${questionDto.getVoterSize()}"></span>
-                    </button>
-                </form>
-                <a th:href="@{|/question/modify/${questionDto.getId()}|}" class="btn btn-sm btn-outline-secondary"
-                   sec:authorize="isAuthenticated()"
-                   th:if="${questionDto.getUsername() != null and #authentication.getName() == questionDto.getUsername()}"
-                   th:text="수정"></a>
-                <form th:action="@{|/question/delete/${questionDto.id}|}" method="post"
-                      sec:authorize="isAuthenticated()"
-                      th:if="${questionDto.getUsername() != null and #authentication.getName() == questionDto.getUsername()}">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                    <button type="submit" class="delete btn btn-sm btn-outline-secondary" href="javascript:void(0);">
-                        삭제
-                    </button>
+            <div class="my-3 d-flex justify-content-between align-items-center">
+                <div class="my-3 d-flex gap-2">
+                    <form th:action="@{|/question/vote/${questionDto.getId()}|}" method="post"
+                          sec:authorize="isAuthenticated()">
+                        <button type="button" class="recommend btn btn-sm btn-outline-secondary"
+                                href="javascript:void(0);">
+                            추천
+                            <span class="badge rounded-pill bg-success" th:text="${questionDto.getVoterSize()}"></span>
+                        </button>
+                    </form>
+                    <a th:href="@{|/question/modify/${questionDto.getId()}|}" class="btn btn-sm btn-outline-secondary"
+                       sec:authorize="isAuthenticated()"
+                       th:if="${questionDto.getUsername() != null and #authentication.getName() == questionDto.getUsername()}"
+                       th:text="수정"></a>
+                    <form th:action="@{|/question/delete/${questionDto.getId()}|}" method="post"
+                          sec:authorize="isAuthenticated()"
+                          th:if="${questionDto.getUsername() != null and #authentication.getName() == questionDto.getUsername()}">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="button" class="delete btn btn-sm btn-outline-secondary"
+                                href="javascript:void(0);">
+                            삭제
+                        </button>
+                    </form>
+                </div>
+                <div class="my-3 d-flex gap-2">
+                    <div>
+                        <a href="javascript:void(0);" class="form btn btn-sm btn-outline-secondary"
+                           th:id="|question-${questionDto.getId()}|"
+                           th:text="|댓글작성|">
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:void(0);" class="comment btn btn-sm btn-outline-secondary"
+                           th:id="|question-${questionDto.getId()}|"
+                           th:text="|댓글 ${#lists.size(questionDto.getComments())}|">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <table class="table" th:if="${#lists.size(questionDto.getComments())!=0}" style="display: none"
+                   th:id="|comment-question-${questionDto.getId()}|">
+                <thead class="table-dark">
+                <tr class="text-center">
+                    <th style="width:70%">내용</th>
+                    <th>글쓴이</th>
+                    <th>작성일시</th>
+                    <th style="width:5%"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="text-center" th:each="comment, loop : ${questionDto.getComments()}"
+                    th:if="${comment.type}">
+                    <td class="text-center" th:text="${comment.getContent()}"></td>
+                    <td>
+                        <span th:if="${comment.getUsername() != null}" th:text="${comment.getUsername()}"></span>
+                    </td>
+                    <td th:text="${#temporals.format(comment.modifyDate, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td>
+                        <form th:action="@{|/comment/question/${questionDto.getId()}/delete/${comment.getId()}|}"
+                              method="post"
+                              sec:authorize="isAuthenticated()"
+                              th:if="${comment.getUsername() != null and #authentication.getName() == comment.getUsername()}">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <button type="submit" class="delete btn btn-sm btn-outline-secondary align-items-center"
+                                    href="javascript:void(0);">
+                                x
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div th:id="|form-question-${questionDto.getId()}|" style="display: none" class="form-control">
+                <form th:action="@{|/comment/question/${questionDto.getId()}|}" th:object="${commentForm}" method="post"
+                      class="my-3">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+                    <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" class="form-control"
+                              rows="5"></textarea>
+                    <textarea sec:authorize="isAuthenticated()" th:field="*{content}" class="form-control"
+                              rows="5"></textarea>
+                    <input type="submit" value="댓글 등록" class="btn btn-primary my-2">
                 </form>
             </div>
         </div>
     </div>
-    <h5 class="border-bottom my-3 py-2"
-        th:text="|${#lists.size(questionDto.getAnswerList())}개의 답변이 있습니다.|"></h5>
-    <div class="card my-3" th:each="answer : ${questionDto.getAnswerList()}">
+
+    <!--  답변   -->
+    <div class="d-flex justify-content-between">
+        <h5 class="border-bottom my-3 py-2"
+            th:text="|${#lists.size(questionDto.getAnswers())}개의 답변이 있습니다.|">
+        </h5>
+        <div class="sort-options my-3">
+            <select name="type" id="type-select" class="form-select" onchange="updateSortAndReload()">
+                <option value="descId" th:selected="${sortType == 'descId'}">최신순</option>
+                <option value="voter" th:selected="${sortType == 'voter'}">추천순</option>
+            </select>
+        </div>
+    </div>
+    <div class="card my-3" th:each="answer : ${questionDto.getAnswers()}">
         <a th:id="|answer_${answer.getId()}|"></a>
         <div class="card-body">
             <div class="card-text" th:utext="${@commonUtil.markdown(answer.getContent())}"></div>
@@ -48,30 +124,114 @@
                     <div th:text="${#temporals.format(answer.getModifyDate(), 'yyyy-MM-dd HH:mm')}"></div>
                 </div>
             </div>
-            <div class="my-3 d-flex gap-2">
-                <form th:action="@{|/answer/vote/${answer.getId()}|}" method="post"
-                      sec:authorize="isAuthenticated()">
-                    <button type="submit" class="recommend btn btn-sm btn-outline-secondary" href="javascript:void(0);">
-                        추천
-                        <span class="badge rounded-pill bg-success" th:text="${answer.getVoterSize()}"></span>
-                    </button>
-                </form>
-                <a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
-                   sec:authorize="isAuthenticated()"
-                   th:if="${answer.getUsername() != null and #authentication.getName() == answer.getUsername()}"
-                   th:text="수정"></a>
-                <form th:action="@{|/answer/delete/${answer.id}|}" method="post"
-                      sec:authorize="isAuthenticated()"
-                      th:if="${answer.getUsername() != null and #authentication.getName() == answer.getUsername()}">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                    <button type="submit" class="delete btn btn-sm btn-outline-secondary" href="javascript:void(0);">
-                        삭제
-                    </button>
+            <div class="my-3 d-flex justify-content-between align-items-center">
+                <div class="my-3 d-flex gap-2">
+                    <form th:action="@{|/answer/vote/${answer.getId()}|}" method="post"
+                          sec:authorize="isAuthenticated()">
+                        <button type="button" class="recommend btn btn-sm btn-outline-secondary"
+                                href="javascript:void(0);">
+                            추천
+                            <span class="badge rounded-pill bg-success" th:text="${answer.getVoterSize()}"></span>
+                        </button>
+                    </form>
+                    <a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
+                       sec:authorize="isAuthenticated()"
+                       th:if="${answer.getUsername() != null and #authentication.getName() == answer.getUsername()}"
+                       th:text="수정"></a>
+                    <form th:action="@{|/answer/delete/${answer.getId()}|}" method="post"
+                          sec:authorize="isAuthenticated()"
+                          th:if="${answer.getUsername() != null and #authentication.getName() == answer.getUsername()}">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="button" class="delete btn btn-sm btn-outline-secondary"
+                                href="javascript:void(0);">
+                            삭제
+                        </button>
+                    </form>
+                </div>
+                <div class="my-3 d-flex gap-2">
+                    <div>
+                        <a href="javascript:void(0);" class="form btn btn-sm btn-outline-secondary"
+                           th:id="|ans-${answer.getId()}|"
+                           th:text="|댓글작성|">
+                        </a>
+                    </div>
+                    <div>
+                        <a href="javascript:void(0);" class="comment btn btn-sm btn-outline-secondary"
+                           th:id="|ans-${answer.getId()}|" th:text="|댓글 ${#lists.size(answer.getComments())}|">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <table class="table" th:if="${#lists.size(answer.getComments())!=0}" style="display: none"
+                   th:id="|comment-ans-${answer.getId()}|">
+                <thead class="table-dark">
+                <tr class="text-center">
+                    <th style="width:70%">내용</th>
+                    <th>글쓴이</th>
+                    <th>작성일시</th>
+                    <th style="width:5%"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="text-center" th:each="comment, loop : ${answer.getComments()}">
+                    <td class="text-center" th:text="${comment.getContent()}"></td>
+                    <td><span th:if="${comment.getUsername() != null}" th:text="${comment.getUsername()}"></span></td>
+                    <td th:text="${#temporals.format(comment.getModifyDate(), 'yyyy-MM-dd HH:mm')}"></td>
+                    <td>
+                        <form th:action="@{|/comment/question/${questionDto.getId()}/delete/${comment.getId()}|}"
+                              method="post"
+                              sec:authorize="isAuthenticated()"
+                              th:if="${comment.getUsername() != null and #authentication.getName() == comment.getUsername()}">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <button type="button" class="delete btn btn-sm btn-outline-secondary align-items-center"
+                                    href="javascript:void(0);">
+                                x
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div th:id="|form-ans-${answer.getId()}|" style="display: none" class="form-control">
+                <form th:action="@{|/comment/question/${questionDto.getId()}/answer/${answer.getId()}|}"
+                      th:object="${commentForm}" method="post" class="my-3">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+                    <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" class="form-control"
+                              rows="5"></textarea>
+                    <textarea sec:authorize="isAuthenticated()" th:field="*{content}" class="form-control"
+                              rows="5"></textarea>
+                    <input type="submit" value="댓글 등록" class="btn btn-primary my-2">
                 </form>
             </div>
         </div>
     </div>
-    <form th:action="@{|/answer/${questionDto.getId()}|}" method="post" th:object="${answerSaveDto}" class="my-3">
+    <div th:if="${!questionDto.getAnswers().isEmpty()}">
+        <ul class="pagination justify-content-center mt-3">
+            <li class="page-item" th:classappend="${!questionDto.getAnswers().hasPrevious} ? 'disabled'">
+                <a class="page-link" href="javascript:void(0)" th:data-page="${questionDto.getAnswers().number-1}">
+                    <span>이전</span>
+                </a>
+            </li>
+            <li th:each="page: ${#numbers.sequence(0, questionDto.getAnswers().totalPages-1)}"
+                th:if="${page >= questionDto.getAnswers().number-2 and page <= questionDto.getAnswers().number+2}"
+                th:classappend="${page == questionDto.getAnswers().number} ? 'active'"
+                class="page-item">
+                <a th:text="${page+1}" class="page-link" href="javascript:void(0)" th:data-page="${page}"></a>
+            </li>
+            <li class="page-item" th:classappend="${!questionDto.getAnswers().hasNext} ? 'disabled'">
+                <a class="page-link" href="javascript:void(0)" th:data-page="${questionDto.getAnswers().number+1}">
+                    <span>다음</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <form th:action="@{|/question/detail/${questionDto.getId()}|}" method="get" id="sortForm">
+        <input type="hidden" id="type" name="type" th:value="${sortType}">
+        <input type="hidden" id="page" name="page" th:value="${questionDto.getAnswers().number}">
+    </form>
+    <!--  답변작성 폼   -->
+    <form th:action="@{|/answer/${questionDto.getId()}|}" method="post" th:object="${answerSave}" class="my-3">
         <div th:replace="~{form_errors :: formErrorsFragment}"></div>
         <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" class="form-control"
                   rows="10"></textarea>
@@ -80,24 +240,78 @@
     </form>
 </div>
 <script layout:fragment="script" type='text/javascript'>
+    document.addEventListener("DOMContentLoaded", function () {
+        const storedType = localStorage.getItem("sortType");
+        if (storedType) {
+            document.getElementById("type").value = storedType;
+            document.getElementById("type-select").value = storedType;
+        }else{
+            document.getElementById("type").value = "descId";
+            document.getElementById("type-select").value = "descId";
+        }
+    });
+    function updateSortAndReload() {
+        const selectedType = document.getElementById("type-select").value;
+        localStorage.setItem("sortType", selectedType);
+        document.getElementById("type").value = selectedType;
+        document.getElementById("page").value = 0;
+        document.getElementById("sortForm").submit();
+    }
+    const page_elements = document.getElementsByClassName("page-link");
+    Array.from(page_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            document.getElementById('page').value = this.dataset.page;
+            document.getElementById("sortForm").submit();
+        });
+    });
     const delete_elements = document.getElementsByClassName("delete");
     Array.from(delete_elements).forEach(function (element) {
         element.addEventListener('click', function () {
             if (confirm("정말로 삭제하시겠습니까?")) {
-                location.href = this.dataset.uri;
+                const form = this.closest("form");
+                form.submit();
             }
-            ;
         });
     });
     const recommend_elements = document.getElementsByClassName("recommend");
     Array.from(recommend_elements).forEach(function (element) {
         element.addEventListener('click', function () {
             if (confirm("정말로 추천하시겠습니까?")) {
-                location.href = this.dataset.uri;
+                const form = this.closest("form");
+                form.submit();
             }
-            ;
         });
     });
+    const comment_elements = document.getElementsByClassName("comment btn");
+    Array.from(comment_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            const comment_table = document.getElementById("comment-" + element.id)
+            if (comment_table.style.display === 'none') {
+                comment_table.style.display = 'table';
+                element.style.background = 'gray';
+                element.style.color = 'white';
+            } else {
+                comment_table.style.display = 'none';
+                element.style.background = 'white';
+                element.style.color = 'gray';
+            }
+        })
+    })
+    const form_elements = document.getElementsByClassName("form btn");
+    Array.from(form_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            const comment_table = document.getElementById("form-" + element.id)
+            if (comment_table.style.display === 'none') {
+                comment_table.style.display = 'table';
+                element.style.background = 'gray';
+                element.style.color = 'white';
+            } else {
+                comment_table.style.display = 'none';
+                element.style.background = 'white';
+                element.style.color = 'gray';
+            }
+        })
+    })
 </script>
 </html>
 
