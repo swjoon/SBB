@@ -58,6 +58,7 @@ public class UserDto {
         private String username;
         private String nickname;
         private String email;
+        private String provider;
         private LocalDateTime createDate;
         private Page<QuestionDto.GetQuestion> questions;
 
@@ -65,6 +66,7 @@ public class UserDto {
             this.username = user.getUsername();
             this.nickname = user.getNickname();
             this.email = user.getEmail();
+            this.provider = user.getProvider();
             this.createDate = user.getCreateDate();
             this.questions = questions;
         }

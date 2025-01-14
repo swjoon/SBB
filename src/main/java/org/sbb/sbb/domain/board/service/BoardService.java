@@ -13,13 +13,9 @@ import org.sbb.sbb.domain.question.entity.Question;
 import org.sbb.sbb.domain.question.service.QuestionService;
 import org.sbb.sbb.domain.user.entity.User;
 import org.sbb.sbb.domain.user.service.UserService;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
