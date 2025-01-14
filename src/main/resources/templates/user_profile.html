@@ -1,0 +1,107 @@
+<!doctype html>
+<html layout:decorate="~{layout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div layout:fragment="content" class="container my-3">
+    <!-- 사용자 기본정보 -->
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <h3 class="card-title text-primary" th:text="${profile.getUsername()}">User Nickname</h3>
+            <p class="card-text">
+                <strong>닉네임:</strong> <span th:text="${profile.getNickname()}">Nickname</span><br>
+                <strong>Email:</strong> <span th:text="${profile.getEmail()}">user@example.com</span><br>
+                <strong>가입 날짜:</strong> <span th:text="${#temporals.format(profile.getCreateDate(), 'yyyy-MM-dd')}"></span><br>
+                <button id="question-btn" class="btn btn-sm btn-outline-primary mt-2">
+                    <span th:text="|작성한 질문 목록|"></span>
+                </button>
+                <a class="btn btn-sm btn-outline-primary mt-2" th:href="@{|/user/update/pw|}">
+                    <span th:text="|비밀번호 변경하기|"></span>
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div id="question-content" class="card shadow-sm" th:style="'display: ' + (${visible} ? 'block' : 'none')">
+        <!-- 질문목록 -->
+        <div class="card-body">
+            <h5 class="card-title text-secondary">작성한 질문 목록</h5>
+            <table class="table table-hover">
+                <thead class="table-dark">
+                <tr class="text-center">
+                    <th>번호</th>
+                    <th style="width:50%">제목</th>
+                    <th>글쓴이</th>
+                    <th>작성일시</th>
+                    <th>조회수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="text-center" th:each="question, loop : ${profile.getQuestions()}">
+                    <td th:text="${profile.getQuestions().getTotalElements - (profile.getQuestions().number * profile.getQuestions().size) - loop.index}"></td>
+                    <td class="text-start">
+                        <a th:href="@{|/question/detail/${question.getId()}|}" th:text="${question.getSubject()}"></a>
+                        <span class="badge bg-danger ms-2"
+                              th:if="${question.getAnswerCount() > 0}"
+                              th:text="${question.getAnswerCount()}">
+                        </span>
+                    </td>
+                    <td><span th:if="${question.getUsername() != null}" th:text="${question.getUsername()}"></span></td>
+                    <td th:text="${#temporals.format(question.getModifyDate(), 'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${question.getViewCount()}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div th:if="${!profile.getQuestions().isEmpty()}">
+                <ul class="pagination justify-content-center mt-3">
+                    <li class="page-item" th:classappend="${!profile.getQuestions().hasPrevious} ? 'disabled'">
+                        <a class="page-link" href="javascript:void(0)" th:data-page="${profile.getQuestions().number-1}">
+                            <span>이전</span>
+                        </a>
+                    </li>
+                    <li th:each="page: ${#numbers.sequence(0, profile.getQuestions().totalPages-1)}"
+                        th:if="${page >= profile.getQuestions().number-2 and page <= profile.getQuestions().number+2}"
+                        th:classappend="${page == profile.getQuestions().number} ? 'active'"
+                        class="page-item">
+                        <a th:text="${page+1}" class="page-link" href="javascript:void(0)" th:data-page="${page}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${!profile.getQuestions().hasNext} ? 'disabled'">
+                        <a class="page-link" href="javascript:void(0)" th:data-page="${profile.getQuestions().number+1}">
+                            <span>다음</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <form th:action="@{/user/profile}" method="get" id="searchForm">
+            <input type="hidden" id="page" name="page" th:value="${profile.getQuestions().number}">
+        </form>
+    </div>
+</div>
+<script layout:fragment="script" type='text/javascript'>
+    const page_elements = document.getElementsByClassName("page-link");
+    Array.from(page_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            document.getElementById('page').value = this.dataset.page;
+            document.getElementById('searchForm').submit();
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const isVisible = localStorage.getItem("visible") === "true";
+        questionContent.style.display = isVisible ? "block" : "none";
+    });
+
+    const questionBtn = document.getElementById("question-btn");
+    const questionContent = document.getElementById("question-content");
+    if (questionBtn && questionContent) {
+        questionBtn.addEventListener('click', function () {
+            if (questionContent.style.display === 'none' || !questionContent.style.display) {
+                questionContent.style.display = 'block';
+                localStorage.setItem("visible", "true");
+            } else {
+                questionContent.style.display = 'none';
+                localStorage.setItem("visible", "false");
+            }
+        });
+    }
+</script>
+</html>
